@@ -23,14 +23,8 @@ public class SpringInitializrController {
     SpringInitializrService springInitializrService;
 
     @GetMapping("zip")
-    public ResponseEntity<?> downloadTemplate(@Valid @RequestBody SpringInitializrRequest springInitializrRequest,
-                                              BindingResult bindingResult) {
+    public ResponseEntity<?> downloadTemplate(@Valid @RequestBody SpringInitializrRequest springInitializrRequest) {
         log.info("springInitializrRequest: {}", springInitializrRequest);
-        if (bindingResult.hasErrors()) {
-            log.error("Binding result errors: {}", bindingResult.getAllErrors());
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, bindingResult.getAllErrors().toString());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
         springInitializrService.downloadTemplate(springInitializrRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
