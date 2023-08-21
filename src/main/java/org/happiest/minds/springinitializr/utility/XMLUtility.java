@@ -81,25 +81,26 @@ public class XMLUtility {
                 NodeList dependencies = document.getElementsByTagName(Constants.DEPENDENCIES);
                 switch (dependency) {
                     case Constants.WEB ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-web");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.WEB_ARTIFACT_ID);
                     case Constants.GRAPH_QL ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-graphql");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.GRAPHQL_ARTIFACT_ID);
                     case Constants.THYMELEAF ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-thymeleaf");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.THYMELEAF_ARTIFACT_ID);
                     case Constants.SECURITY ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-security");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.SECURITY_ARTIFACT_ID);
                     case Constants.JPA ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-data-jpa");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.JPA_ARTIFACT_ID);
                     case Constants.JDBC ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-data-jdbc");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.JDBC_ARTIFACT_ID);
                     case Constants.MY_SQL ->
-                            setTextContentForDependency(document, dependencies, "com.mysql", "mysql-connector-j");
-                    case Constants.H_2 -> setTextContentForDependency(document, dependencies, "com.h2database", "h2");
+                            setTextContentForDependency(document, dependencies, Constants.MYSQL_GROUP_ID, Constants.MYSQL_ARTIFACT_ID);
+                    case Constants.H_2 ->
+                            setTextContentForDependency(document, dependencies, Constants.H2_GROUP_ID, Constants.H2_ARTIFACT_ID);
                     case Constants.VALIDATION ->
-                            setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-validation");
+                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.VALIDATION_ARTIFACT_ID);
                     case Constants.LOMBOK ->
-                            setTextContentForDependency(document, dependencies, "org.projectlombok", "lombok");
-                    default -> log.error("No such dependency available");
+                            setTextContentForDependency(document, dependencies, Constants.LOMBOK_GROUP_ID, Constants.LOMBOK_ARTIFACT_ID);
+                    default -> log.error(Constants.DEPENDENCY_NOT_PRESENT);
                 }
             }
         } catch (Exception e) {

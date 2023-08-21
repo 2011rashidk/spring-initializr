@@ -41,4 +41,18 @@ public class Constants {
     public static final String DEPENDENCY_NOT_PRESENT = "Dependency not present";
     public static final String SPRING_TEMPLATE_READY_TO_DOWNLOAD = "Spring template ready to download";
     public static final String ZIP = ".zip";
+    public static final String SPRING_FRAMEWORK_GROUD_ID = "org.springframework.boot";
+    public static final String WEB_ARTIFACT_ID = "spring-boot-starter-web";
+    public static final String GRAPHQL_ARTIFACT_ID = "spring-boot-starter-graphql";
+    public static final String THYMELEAF_ARTIFACT_ID = "spring-boot-starter-thymeleaf";
+    public static final String SECURITY_ARTIFACT_ID = "spring-boot-starter-security";
+    public static final String JPA_ARTIFACT_ID = "spring-boot-starter-data-jpa";
+    public static final String JDBC_ARTIFACT_ID = "spring-boot-starter-data-jdbc";
+    public static final String MYSQL_GROUP_ID = "com.mysql";
+    public static final String MYSQL_ARTIFACT_ID = "mysql-connector-j";
+    public static final String H2_GROUP_ID = "com.h2database";
+    public static final String H2_ARTIFACT_ID = "h2";
+    public static final String VALIDATION_ARTIFACT_ID = "spring-boot-starter-validation";
+    public static final String LOMBOK_GROUP_ID = "org.projectlombok";
+    public static final String LOMBOK_ARTIFACT_ID = "lombok";
 }
