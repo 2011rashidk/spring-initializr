@@ -1,7 +1,12 @@
 package org.happiest.minds.springinitializr.utility;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.happiest.minds.springinitializr.constant.Constants;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -73,6 +78,27 @@ public class FileUtility {
     public static void deleteDirContents(String dirName) {
         try {
             FileUtils.cleanDirectory(new File(dirName));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    public static void downloadFile(HttpServletResponse httpServletResponse, String fileName) {
+        try {
+            String zipName = fileName + Constants.ZIP;
+            Path path = Paths.get(zipName);
+            String contentType;
+            contentType = Files.probeContentType(path);
+            if (contentType == null) {
+                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            }
+            httpServletResponse.setContentType(contentType);
+            httpServletResponse.setContentLengthLong(Files.size(path));
+            httpServletResponse.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+                    .filename(path.getFileName().toString())
+                    .build()
+                    .toString());
+            Files.copy(path, httpServletResponse.getOutputStream());
         } catch (Exception e) {
             log.error(e.getMessage());
         }

@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SpringInitializrRequest {
 
@@ -33,5 +35,5 @@ public class SpringInitializrRequest {
 
     @NotEmpty(message = "artifact should not be blank")
     @NotNull(message = "artifact should not be blank")
-    private String[] dependencies;
+    private List<String> dependencies;
 }

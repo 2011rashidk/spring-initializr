@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -75,28 +76,29 @@ public class XMLUtility {
 
     private static void createDependency(SpringInitializrRequest springInitializrRequest, Document document) {
         try {
-            Set<String> dependencyInput = Set.of(springInitializrRequest.getDependencies());
-            for (String s : dependencyInput) {
+            Set<String> dependencyInput = new HashSet<>(springInitializrRequest.getDependencies());
+            for (String dependency : dependencyInput) {
                 NodeList dependencies = document.getElementsByTagName(Constants.DEPENDENCIES);
-                switch (s) {
-                    case "Web" ->
+                switch (dependency) {
+                    case Constants.WEB ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-web");
-                    case "GraphQL" ->
+                    case Constants.GRAPH_QL ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-graphql");
-                    case "Thymeleaf" ->
+                    case Constants.THYMELEAF ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-thymeleaf");
-                    case "Security" ->
+                    case Constants.SECURITY ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-security");
-                    case "Jpa" ->
+                    case Constants.JPA ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-data-jpa");
-                    case "JDBC" ->
+                    case Constants.JDBC ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-data-jdbc");
-                    case "MySQL" ->
+                    case Constants.MY_SQL ->
                             setTextContentForDependency(document, dependencies, "com.mysql", "mysql-connector-j");
-                    case "H2 Database" -> setTextContentForDependency(document, dependencies, "com.h2database", "h2");
-                    case "Validation" ->
+                    case Constants.H_2 -> setTextContentForDependency(document, dependencies, "com.h2database", "h2");
+                    case Constants.VALIDATION ->
                             setTextContentForDependency(document, dependencies, "org.springframework.boot", "spring-boot-starter-validation");
-                    case "Lombok" -> setTextContentForDependency(document, dependencies, "org.projectlombok", "lombok");
+                    case Constants.LOMBOK ->
+                            setTextContentForDependency(document, dependencies, "org.projectlombok", "lombok");
                     default -> log.error("No such dependency available");
                 }
             }
