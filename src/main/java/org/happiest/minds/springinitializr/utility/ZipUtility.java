@@ -24,6 +24,7 @@ public class ZipUtility {
             String zipName = projectDirectory + Constants.ZIP;
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(Path.of(zipName).toFile()));
             Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<>() {
+                @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     zipOutputStream.putNextEntry(new ZipEntry(sourceFolderPath.relativize(file).toString()));
                     Files.copy(file, zipOutputStream);

@@ -29,9 +29,9 @@ public class SpringInitializrController {
     SpringInitializrService springInitializrService;
 
     @GetMapping("zip")
-    public ResponseEntity<?> downloadTemplate(HttpServletResponse httpServletResponse,
-                                              @Valid @RequestBody SpringInitializrRequest springInitializrRequest,
-                                              BindingResult bindingResult) {
+    public ResponseEntity<SpringInitializrResponse> downloadTemplate(HttpServletResponse httpServletResponse,
+                                                                     @Valid @RequestBody SpringInitializrRequest springInitializrRequest,
+                                                                     BindingResult bindingResult) {
         log.info("springInitializrRequest: {}", springInitializrRequest);
         if (bindingResult.hasErrors()) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -39,17 +39,18 @@ public class SpringInitializrController {
                 stringBuilder.append(fieldError.getDefaultMessage()).append(",");
             }
             log.error("Binding result errors: {}", stringBuilder);
-            SpringInitializrResponse errorResponse = new SpringInitializrResponse(HttpStatus.BAD_REQUEST, stringBuilder.toString());
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            SpringInitializrResponse springInitializrResponse = new SpringInitializrResponse(HttpStatus.BAD_REQUEST, stringBuilder.toString());
+            return new ResponseEntity<>(springInitializrResponse, HttpStatus.BAD_REQUEST);
         }
         if (!springInitializrService.dependencyPresent(springInitializrRequest.getDependencies())) {
+            log.error(Constants.DEPENDENCY_NOT_PRESENT);
             return new ResponseEntity<>(new SpringInitializrResponse(HttpStatus.BAD_REQUEST, Constants.DEPENDENCY_NOT_PRESENT), HttpStatus.BAD_REQUEST);
         }
         return springInitializrService.downloadTemplate(httpServletResponse, springInitializrRequest);
     }
 
     @GetMapping("dependencies")
-    public ResponseEntity<?> getDependencies() {
+    public ResponseEntity<Map<String, List<String>>> getDependencies() {
         List<String> dependencies = springInitializrService.getDependencies();
         Map<String, List<String>> dependenciesMap = Map.of(Constants.DEPENDENCIES, dependencies);
         log.info("Dependencies: {}", dependenciesMap);

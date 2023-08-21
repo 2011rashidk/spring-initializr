@@ -27,7 +27,7 @@ public class SpringInitializrService {
     @Autowired
     ZipUtility zipUtility;
 
-    public ResponseEntity<?> downloadTemplate(HttpServletResponse httpServletResponse, SpringInitializrRequest springInitializrRequest) {
+    public ResponseEntity<SpringInitializrResponse> downloadTemplate(HttpServletResponse httpServletResponse, SpringInitializrRequest springInitializrRequest) {
         try {
 
             FileUtility.copyDirectory(Constants.REFERENCE_DIR_PATH, Constants.DOWNLOAD_DIR_PATH);

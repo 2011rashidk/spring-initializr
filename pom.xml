@@ -15,6 +15,11 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>
+        <sonar.coverage.exclusions>
+            **/utility/*,
+            **/exception/*,
+            **/SpringInitializrApplication.java
+        </sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <dependency>

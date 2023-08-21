@@ -14,7 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -49,9 +48,10 @@ public class FileUtility {
 
     public static void replaceTextInFile(String filePath, String text, String replacement) {
         try {
+            log.info("Filepath: {}, text: {}, replacement text: {}", filePath, text, replacement);
             Path path = Paths.get(filePath);
             Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8);
-            List<String> list = stream.map(line -> line.replace(text, replacement)).collect(Collectors.toList());
+            List<String> list = stream.map(line -> line.replace(text, replacement)).toList();
             Files.write(path, list, StandardCharsets.UTF_8);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -60,6 +60,7 @@ public class FileUtility {
 
     public static void moveOrRenameFile(String source, String destination) {
         try {
+            log.info("Source: {}, destination: {}", source, destination);
             FileUtils.moveFile(new File(source), new File(destination));
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -68,8 +69,10 @@ public class FileUtility {
 
     public static void renameDir(String existingDirName, String newDirName) {
         try {
+            log.info("Existing directory name: {}, new directory name: {}", existingDirName, newDirName);
             File file = new File(existingDirName);
-            file.renameTo(new File(newDirName));
+            boolean isRenamed = file.renameTo(new File(newDirName));
+            log.info("Is file renamed: {}", isRenamed);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -77,6 +80,7 @@ public class FileUtility {
 
     public static void deleteDirContents(String dirName) {
         try {
+            log.info("Directory name: {}", dirName);
             FileUtils.cleanDirectory(new File(dirName));
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -85,6 +89,7 @@ public class FileUtility {
 
     public static void downloadFile(HttpServletResponse httpServletResponse, String fileName) {
         try {
+            log.info("Filename: {}", fileName);
             String zipName = fileName + Constants.ZIP;
             Path path = Paths.get(zipName);
             String contentType;

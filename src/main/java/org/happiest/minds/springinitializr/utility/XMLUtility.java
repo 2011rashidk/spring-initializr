@@ -26,7 +26,7 @@ public class XMLUtility {
     public void updateXMLElementValue(String filePath, SpringInitializrRequest springInitializrRequest) {
 
         File xmlFile = new File(filePath);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newDefaultInstance();
         try {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document document = dBuilder.parse(xmlFile);
@@ -111,7 +111,7 @@ public class XMLUtility {
     private static void updateXML(String filePath, Document document) {
         try {
             document.getDocumentElement().normalize();
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            TransformerFactory transformerFactory = TransformerFactory.newDefaultInstance();
             Transformer transformer;
             transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(document);
