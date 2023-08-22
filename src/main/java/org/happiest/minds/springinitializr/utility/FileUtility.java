@@ -3,7 +3,6 @@ package org.happiest.minds.springinitializr.utility;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.happiest.minds.springinitializr.constant.Constants;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static org.happiest.minds.springinitializr.enums.Constants.*;
 
 @Slf4j
 public class FileUtility {
@@ -90,7 +91,7 @@ public class FileUtility {
     public static void downloadFile(HttpServletResponse httpServletResponse, String fileName) {
         try {
             log.info("Filename: {}", fileName);
-            String zipName = fileName + Constants.ZIP;
+            String zipName = fileName + ZIP.getValue();
             Path path = Paths.get(zipName);
             String contentType;
             contentType = Files.probeContentType(path);

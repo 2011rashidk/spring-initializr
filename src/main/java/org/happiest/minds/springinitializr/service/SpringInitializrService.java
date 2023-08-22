@@ -2,7 +2,6 @@ package org.happiest.minds.springinitializr.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.happiest.minds.springinitializr.constant.Constants;
 import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
 import org.happiest.minds.springinitializr.response.SpringInitializrResponse;
 import org.happiest.minds.springinitializr.utility.FileUtility;
@@ -17,6 +16,9 @@ import org.springframework.util.StringUtils;
 import java.util.HashSet;
 import java.util.List;
 
+import static org.happiest.minds.springinitializr.enums.Constants.*;
+import static org.happiest.minds.springinitializr.constant.StringConstants.*;
+
 @Service
 @Slf4j
 public class SpringInitializrService {
@@ -30,36 +32,42 @@ public class SpringInitializrService {
     public ResponseEntity<SpringInitializrResponse> downloadTemplate(HttpServletResponse httpServletResponse, SpringInitializrRequest springInitializrRequest) {
         try {
 
-            FileUtility.copyDirectory(Constants.REFERENCE_DIR_PATH, Constants.DOWNLOAD_DIR_PATH);
+            if (!dependencyPresent(springInitializrRequest.getDependencies())) {
+                log.error(DEPENDENCY_NOT_PRESENT.getValue());
+                return new ResponseEntity<>(new SpringInitializrResponse(HttpStatus.BAD_REQUEST, DEPENDENCY_NOT_PRESENT.getValue()), HttpStatus.BAD_REQUEST);
+            }
 
-            updateDirectory(Constants.DOWNLOAD_DIR_MAIN_PATH, Constants.DOWNLOAD_DIR_MAIN_JAVA_PATH,
-                    Constants.REFERENCE_DIR_MAIN_FILE_PATH, Constants.MAIN_CLASS_FILENAME,
-                    Constants.APPLICATION, Constants.SPRING_TEMPLATE_APPLICATION, springInitializrRequest);
+            FileUtility.copyDirectory(REFERENCE_DIR_PATH.getValue(), DOWNLOAD_DIR_PATH.getValue());
 
-            updateDirectory(Constants.DOWNLOAD_DIR_TEST_PATH, Constants.DOWNLOAD_DIR_TEST_JAVA_PATH,
-                    Constants.REFERENCE_DIR_TEST_FILE_PATH, Constants.TEST_CLASS_FILENAME,
-                    Constants.APPLICATION_TESTS, Constants.SPRING_TEMPLATE_APPLICATION_TESTS, springInitializrRequest);
+            updateDirectory(DOWNLOAD_DIR_MAIN_PATH.getValue(), DOWNLOAD_DIR_MAIN_JAVA_PATH.getValue(),
+                    REFERENCE_DIR_MAIN_FILE_PATH.getValue(), MAIN_CLASS_FILENAME.getValue(),
+                    APPLICATION.getValue(), SPRING_TEMPLATE_APPLICATION.getValue(), springInitializrRequest);
 
-            xmlUtility.updateXMLElementValue(Constants.POM_XML_FILEPATH, springInitializrRequest);
+            updateDirectory(DOWNLOAD_DIR_TEST_PATH.getValue(), DOWNLOAD_DIR_TEST_JAVA_PATH.getValue(),
+                    REFERENCE_DIR_TEST_FILE_PATH.getValue(), TEST_CLASS_FILENAME.getValue(),
+                    APPLICATION_TESTS.getValue(), SPRING_TEMPLATE_APPLICATION_TESTS.getValue(), springInitializrRequest);
 
-            String newFolderName = Constants.DOWNLOAD_DIR_PATH + springInitializrRequest.getArtifact();
-            FileUtility.renameDir(Constants.PROJECT_DIR_NAME, newFolderName);
+            xmlUtility.updateXMLElementValue(POM_XML_FILEPATH.getValue(), springInitializrRequest);
+
+            String newFolderName = DOWNLOAD_DIR_PATH.getValue() + springInitializrRequest.getArtifact();
+
+            FileUtility.renameDir(PROJECT_DIR_NAME.getValue(), newFolderName);
 
             zipUtility.zipFolder(newFolderName);
 
             FileUtility.downloadFile(httpServletResponse, newFolderName);
 
-            FileUtility.deleteDirContents(Constants.DOWNLOAD_DIR_PATH);
+            FileUtility.deleteDirContents(DOWNLOAD_DIR_PATH.getValue());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return new ResponseEntity<>(new SpringInitializrResponse(HttpStatus.OK, Constants.SPRING_TEMPLATE_READY_TO_DOWNLOAD), HttpStatus.OK);
+        return new ResponseEntity<>(new SpringInitializrResponse(HttpStatus.OK, SPRING_TEMPLATE_READY_TO_DOWNLOAD.getValue()), HttpStatus.OK);
     }
 
-    private static void updateDirectory(String mainDirPath, String javaDirPath,
-                                        String mainClassFilePath, String mainClassFilename,
-                                        String application, String mainClassName,
-                                        SpringInitializrRequest springInitializrRequest) {
+    public static void updateDirectory(String mainDirPath, String javaDirPath,
+                                       String mainClassFilePath, String mainClassFilename,
+                                       String application, String mainClassName,
+                                       SpringInitializrRequest springInitializrRequest) {
         try {
             String artifactId = springInitializrRequest.getArtifact().replaceAll("[^a-zA-Z]", "");
             String packagingNamePath = springInitializrRequest.getPackagingName().replaceAll("[.]", "//");
@@ -70,8 +78,8 @@ public class SpringInitializrService {
             String testClassFilenamePath = downloadDirTestClassPath + mainClassFilename;
             String newTestClassName = StringUtils.capitalize(artifactId) + application;
             FileUtility.replaceTextInFile(testClassFilenamePath, mainClassName, newTestClassName);
-            FileUtility.replaceTextInFile(testClassFilenamePath, Constants.EXISTING_PACKAGE_NAME, springInitializrRequest.getPackagingName());
-            String newTestClassFilename = downloadDirTestClassPath + "/" + newTestClassName + Constants.JAVA;
+            FileUtility.replaceTextInFile(testClassFilenamePath, EXISTING_PACKAGE_NAME.getValue(), springInitializrRequest.getPackagingName());
+            String newTestClassFilename = downloadDirTestClassPath + SLASH.getValue() + newTestClassName + JAVA.getValue();
             FileUtility.moveOrRenameFile(testClassFilenamePath, newTestClassFilename);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -79,9 +87,11 @@ public class SpringInitializrService {
     }
 
     public List<String> getDependencies() {
-        return List.of(Constants.WEB, Constants.GRAPH_QL, Constants.THYMELEAF,
-                Constants.SECURITY, Constants.JPA, Constants.JDBC,
-                Constants.MY_SQL, Constants.H_2, Constants.VALIDATION, Constants.LOMBOK);
+        List<String> dependencies = List.of(WEB, GRAPH_QL, THYMELEAF,
+                SECURITY, JPA, JDBC,
+                MY_SQL, H_2, VALIDATION, LOMBOK);
+        log.info("Dependencies: {}", dependencies);
+        return dependencies;
     }
 
     public boolean dependencyPresent(List<String> dependencies) {

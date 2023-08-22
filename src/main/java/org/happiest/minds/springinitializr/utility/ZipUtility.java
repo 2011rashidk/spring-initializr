@@ -1,7 +1,6 @@
 package org.happiest.minds.springinitializr.utility;
 
 import lombok.extern.slf4j.Slf4j;
-import org.happiest.minds.springinitializr.constant.Constants;
 import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
@@ -14,6 +13,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static org.happiest.minds.springinitializr.enums.Constants.ZIP;
+
 @Component
 @Slf4j
 public class ZipUtility {
@@ -21,7 +22,7 @@ public class ZipUtility {
     public void zipFolder(String projectDirectory) {
         try {
             Path sourceFolderPath = Path.of(projectDirectory);
-            String zipName = projectDirectory + Constants.ZIP;
+            String zipName = projectDirectory + ZIP.getValue();
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(Path.of(zipName).toFile()));
             Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<>() {
                 @Override

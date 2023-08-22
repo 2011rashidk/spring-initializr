@@ -1,7 +1,6 @@
 package org.happiest.minds.springinitializr.utility;
 
 import lombok.extern.slf4j.Slf4j;
-import org.happiest.minds.springinitializr.constant.Constants;
 import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -19,6 +18,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.happiest.minds.springinitializr.constant.StringConstants.*;
+import static org.happiest.minds.springinitializr.enums.Constants.*;
+
 @Component
 @Slf4j
 public class XMLUtility {
@@ -32,11 +34,11 @@ public class XMLUtility {
             Document document = dBuilder.parse(xmlFile);
             document.getDocumentElement().normalize();
 
-            setTextContent(document, Constants.GROUP_ID, springInitializrRequest.getGroup());
-            setTextContent(document, Constants.ARTIFACT_ID, springInitializrRequest.getArtifact());
-            setTextContent(document, Constants.NAME, springInitializrRequest.getName());
-            setTextContent(document, Constants.DESCRIPTION, springInitializrRequest.getDescription());
-            setTextContent(document, Constants.PACKAGING, springInitializrRequest.getPackagingType());
+            setTextContent(document, GROUP_ID.getValue(), springInitializrRequest.getGroup());
+            setTextContent(document, ARTIFACT_ID.getValue(), springInitializrRequest.getArtifact());
+            setTextContent(document, NAME.getValue(), springInitializrRequest.getName());
+            setTextContent(document, DESCRIPTION.getValue(), springInitializrRequest.getDescription());
+            setTextContent(document, PACKAGING.getValue(), springInitializrRequest.getPackagingType());
 
             createDependency(springInitializrRequest, document);
             updateXML(filePath, document);
@@ -48,11 +50,11 @@ public class XMLUtility {
     private static void setTextContentForDependency(Document document, NodeList dependencies,
                                                     String groupIdValue, String artifactIdValue) {
         try {
-            Element dependency = document.createElement(Constants.DEPENDENCY);
+            Element dependency = document.createElement(DEPENDENCY.getValue());
             Element dependenciesElement = (Element) dependencies.item(0);
             dependenciesElement.appendChild(dependency);
-            Element groupIdOfDependency = document.createElement(Constants.GROUP_ID);
-            Element artifactIdOfDependency = document.createElement(Constants.ARTIFACT_ID);
+            Element groupIdOfDependency = document.createElement(GROUP_ID.getValue());
+            Element artifactIdOfDependency = document.createElement(ARTIFACT_ID.getValue());
             dependency.appendChild(groupIdOfDependency);
             dependency.appendChild(artifactIdOfDependency);
             groupIdOfDependency.setTextContent(groupIdValue);
@@ -78,29 +80,29 @@ public class XMLUtility {
         try {
             Set<String> dependencyInput = new HashSet<>(springInitializrRequest.getDependencies());
             for (String dependency : dependencyInput) {
-                NodeList dependencies = document.getElementsByTagName(Constants.DEPENDENCIES);
+                NodeList dependencies = document.getElementsByTagName(DEPENDENCIES.getValue());
                 switch (dependency) {
-                    case Constants.WEB ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.WEB_ARTIFACT_ID);
-                    case Constants.GRAPH_QL ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.GRAPHQL_ARTIFACT_ID);
-                    case Constants.THYMELEAF ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.THYMELEAF_ARTIFACT_ID);
-                    case Constants.SECURITY ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.SECURITY_ARTIFACT_ID);
-                    case Constants.JPA ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.JPA_ARTIFACT_ID);
-                    case Constants.JDBC ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.JDBC_ARTIFACT_ID);
-                    case Constants.MY_SQL ->
-                            setTextContentForDependency(document, dependencies, Constants.MYSQL_GROUP_ID, Constants.MYSQL_ARTIFACT_ID);
-                    case Constants.H_2 ->
-                            setTextContentForDependency(document, dependencies, Constants.H2_GROUP_ID, Constants.H2_ARTIFACT_ID);
-                    case Constants.VALIDATION ->
-                            setTextContentForDependency(document, dependencies, Constants.SPRING_FRAMEWORK_GROUD_ID, Constants.VALIDATION_ARTIFACT_ID);
-                    case Constants.LOMBOK ->
-                            setTextContentForDependency(document, dependencies, Constants.LOMBOK_GROUP_ID, Constants.LOMBOK_ARTIFACT_ID);
-                    default -> log.error(Constants.DEPENDENCY_NOT_PRESENT);
+                    case WEB ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), WEB_ARTIFACT_ID.getValue());
+                    case GRAPH_QL ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), GRAPHQL_ARTIFACT_ID.getValue());
+                    case THYMELEAF ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), THYMELEAF_ARTIFACT_ID.getValue());
+                    case SECURITY ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), SECURITY_ARTIFACT_ID.getValue());
+                    case JPA ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), JPA_ARTIFACT_ID.getValue());
+                    case JDBC ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), JDBC_ARTIFACT_ID.getValue());
+                    case MY_SQL ->
+                            setTextContentForDependency(document, dependencies, MYSQL_GROUP_ID.getValue(), MYSQL_ARTIFACT_ID.getValue());
+                    case H_2 ->
+                            setTextContentForDependency(document, dependencies, H2_GROUP_ID.getValue(), H2_ARTIFACT_ID.getValue());
+                    case VALIDATION ->
+                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), VALIDATION_ARTIFACT_ID.getValue());
+                    case LOMBOK ->
+                            setTextContentForDependency(document, dependencies, LOMBOK_GROUP_ID.getValue(), LOMBOK_ARTIFACT_ID.getValue());
+                    default -> log.error(DEPENDENCY_NOT_PRESENT.getValue());
                 }
             }
         } catch (Exception e) {

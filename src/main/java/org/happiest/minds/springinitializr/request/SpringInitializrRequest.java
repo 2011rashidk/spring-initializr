@@ -2,7 +2,6 @@ package org.happiest.minds.springinitializr.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
@@ -29,11 +28,10 @@ public class SpringInitializrRequest {
     @Pattern(regexp = "^[a-zA-Z.]+", message = "packaging name should contain only alphabets and dot")
     private String packagingName;
 
-    @NotBlank(message = "artifact should not be blank")
+    @NotBlank(message = "packagingType should not be blank")
     @Pattern(regexp = "^(jar|war)$", message = "word should be jar or war")
     private String packagingType;
 
-    @NotEmpty(message = "artifact should not be blank")
-    @NotNull(message = "artifact should not be blank")
+    @NotEmpty(message = "dependencies should not be empty")
     private List<String> dependencies;
 }

@@ -1,7 +1,6 @@
 package org.happiest.minds.springinitializr.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
