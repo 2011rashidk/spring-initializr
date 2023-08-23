@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -32,15 +31,13 @@ class SpringInitializrControllerTest {
     @InjectMocks
     private SpringInitializrController springInitializrController;
 
-    @MockBean
-    private SpringInitializrService springInitializrService;
 
     @Mock
-    private SpringInitializrService initializrService;
+    private SpringInitializrService springInitializrService;
 
 
     @Test
-    public void testDownloadTemplateWithValidationErrorsPositive() {
+    void testDownloadTemplateWithValidationErrorsPositive() {
         SpringInitializrRequest request = new SpringInitializrRequest();
         request.setGroup("com.happiest.minds");
         request.setArtifact("employee-project");
@@ -54,7 +51,7 @@ class SpringInitializrControllerTest {
         when(!bindingResult.hasErrors()).thenReturn(true);
     }
     @Test
-    public void testDownloadTemplateWithValidationErrors() {
+    void testDownloadTemplateWithValidationErrors() {
         SpringInitializrRequest request = new SpringInitializrRequest();
         request.setGroup("");
         request.setArtifact("");
@@ -74,10 +71,10 @@ class SpringInitializrControllerTest {
     }
 
     @Test
-    public void testGetDependencies_Success() {
-        when(initializrService.getDependencies()).thenReturn(List.of("dependency1", "dependency2"));
+    void testGetDependencies_Success() {
+        when(springInitializrService.getDependencies()).thenReturn(List.of("dependency1", "dependency2"));
         ResponseEntity<?> responseEntity = springInitializrController.getDependencies();
-        verify(initializrService).getDependencies();
+        verify(springInitializrService).getDependencies();
         Map<String, List<String>> expectedResponse = Map.of("dependencies", List.of("dependency1", "dependency2"));
         assertEquals(expectedResponse, responseEntity.getBody());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

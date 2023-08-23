@@ -1,8 +1,15 @@
 package org.happiest.minds.springinitializr.service;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
+import org.happiest.minds.springinitializr.response.SpringInitializrResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
@@ -10,16 +17,37 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.happiest.minds.springinitializr.constant.StringConstants.*;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(SpringExtension.class)
 class SpringInitializrServiceTest {
 
+    @Mock
+    private HttpServletResponse mockResponse;
+
     @InjectMocks
     private SpringInitializrService springInitializrService;
 
+    @AfterEach
+    public void validate() {
+        validateMockitoUsage();
+    }
+
     @Test
-    public void testGetDependencies() {
+    void testDownloadTemplateDependencyNotPresent() {
+        SpringInitializrRequest springInitializrRequest = new SpringInitializrRequest();
+        springInitializrRequest.setDependencies(List.of("Web", "ABC"));
+
+        boolean result = springInitializrService.dependencyPresent(springInitializrRequest.getDependencies());
+        assertFalse(result);
+        ResponseEntity<SpringInitializrResponse> responseEntity = springInitializrService.downloadTemplate(mockResponse, springInitializrRequest);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Any or none of the dependency present", responseEntity.getBody().getMessage());
+    }
+
+    @Test
+    void testGetDependencies() {
         List<String> expectedDependencies = List.of(WEB, GRAPH_QL, THYMELEAF,
                 SECURITY, JPA, JDBC, MY_SQL, H_2, VALIDATION, LOMBOK);
         List<String> actualDependencies = springInitializrService.getDependencies();
@@ -27,7 +55,7 @@ class SpringInitializrServiceTest {
     }
 
     @Test
-    public void testDependencyPresentPositive() {
+    void testDependencyPresentPositive() {
         List<String> dependencies = List.of(WEB, GRAPH_QL, THYMELEAF,
                 SECURITY, JPA, JDBC, MY_SQL, H_2, VALIDATION, LOMBOK);
         boolean result = springInitializrService.dependencyPresent(dependencies);
@@ -35,7 +63,7 @@ class SpringInitializrServiceTest {
     }
 
     @Test
-    public void testDependencyPresentNegative() {
+    void testDependencyPresentNegative() {
         List<String> dependencies = List.of(
                 WEB, SECURITY, "ABC");
         boolean result = springInitializrService.dependencyPresent(dependencies);
