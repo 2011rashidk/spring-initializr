@@ -16,7 +16,6 @@
     <properties>
         <java.version>17</java.version>
         <sonar.coverage.exclusions>
-            **/test/*,
             **/request/*,
             **/enums/*,
             **/constant/*,

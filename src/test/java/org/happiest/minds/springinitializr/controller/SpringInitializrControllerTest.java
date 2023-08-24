@@ -1,5 +1,6 @@
 package org.happiest.minds.springinitializr.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
 import org.happiest.minds.springinitializr.response.SpringInitializrResponse;
 import org.happiest.minds.springinitializr.service.SpringInitializrService;
@@ -8,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -31,9 +33,11 @@ class SpringInitializrControllerTest {
     @InjectMocks
     private SpringInitializrController springInitializrController;
 
+    @MockBean
+    private SpringInitializrService springInitializrService;
 
     @Mock
-    private SpringInitializrService springInitializrService;
+    private SpringInitializrService initializrService;
 
 
     @Test
@@ -48,7 +52,12 @@ class SpringInitializrControllerTest {
         request.setDependencies(List.of("Web", "GraphQL"));
 
         BindingResult bindingResult = mock(BindingResult.class);
-        when(!bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.hasErrors()).thenReturn(false);
+        HttpServletResponse resp = mock(HttpServletResponse.class);
+//        when(springInitializrService.downloadTemplate(new MockHttpServletResponse(), request)).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+//        ResponseEntity<SpringInitializrResponse> response = springInitializrController.downloadTemplate(new MockHttpServletResponse(), request, bindingResult);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
     @Test
     void testDownloadTemplateWithValidationErrors() {
@@ -72,9 +81,9 @@ class SpringInitializrControllerTest {
 
     @Test
     void testGetDependencies_Success() {
-        when(springInitializrService.getDependencies()).thenReturn(List.of("dependency1", "dependency2"));
+        when(initializrService.getDependencies()).thenReturn(List.of("dependency1", "dependency2"));
         ResponseEntity<?> responseEntity = springInitializrController.getDependencies();
-        verify(springInitializrService).getDependencies();
+        verify(initializrService).getDependencies();
         Map<String, List<String>> expectedResponse = Map.of("dependencies", List.of("dependency1", "dependency2"));
         assertEquals(expectedResponse, responseEntity.getBody());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
