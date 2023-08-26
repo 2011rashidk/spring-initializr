@@ -47,7 +47,7 @@ public class XMLUtility {
         }
     }
 
-    private static void setTextContentForDependency(Document document, NodeList dependencies,
+    private void setTextContentForDependency(Document document, NodeList dependencies,
                                                     String groupIdValue, String artifactIdValue) {
         try {
             Element dependency = document.createElement(DEPENDENCY.getValue());
@@ -76,7 +76,7 @@ public class XMLUtility {
         }
     }
 
-    private static void createDependency(SpringInitializrRequest springInitializrRequest, Document document) {
+    private void createDependency(SpringInitializrRequest springInitializrRequest, Document document) {
         try {
             Set<String> dependencyInput = new HashSet<>(springInitializrRequest.getDependencies());
             for (String dependency : dependencyInput) {

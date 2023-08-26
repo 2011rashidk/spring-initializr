@@ -31,7 +31,7 @@ class SpringInitializrServiceTest {
     @InjectMocks
     private SpringInitializrService springInitializrService;
 
-    @Mock
+    @InjectMocks
     private FileUtility fileUtility;
 
     @AfterEach
@@ -81,15 +81,11 @@ class SpringInitializrServiceTest {
 
         Method updateDirectoryMethod = SpringInitializrService.class.getDeclaredMethod(
                 "updateDirectory", String.class, String.class, String.class,
-                String.class, String.class, String.class, SpringInitializrRequest.class
-        );
+                String.class, String.class, String.class, SpringInitializrRequest.class);
         updateDirectoryMethod.setAccessible(true);
 
-        updateDirectoryMethod.invoke(
-                springInitializrService, "mainDirPath", "javaDirPath", "mainClassFilePath",
-                "mainClassFilename", "application", "mainClassName", mockRequest
-        );
-
+        updateDirectoryMethod.invoke(springInitializrService, "mainDirPath", "javaDirPath", "mainClassFilePath",
+                "mainClassFilename", "application", "mainClassName", mockRequest);
     }
 
 }

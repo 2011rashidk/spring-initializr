@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -18,9 +19,10 @@ import java.util.stream.Stream;
 import static org.happiest.minds.springinitializr.enums.Constants.*;
 
 @Slf4j
+@Component
 public class FileUtility {
 
-    public static void copyDirectory(String sourceDir, String destDir) {
+    public void copyDirectory(String sourceDir, String destDir) {
         try {
             log.info("Source directory: {}, Destination directory: {}", sourceDir, destDir);
             FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
@@ -29,7 +31,7 @@ public class FileUtility {
         }
     }
 
-    public static void deleteDirectory(String dirName) {
+    public void deleteDirectory(String dirName) {
         try {
             log.info("Directory name: {}", dirName);
             FileUtils.deleteDirectory(new File(dirName));
@@ -38,7 +40,7 @@ public class FileUtility {
         }
     }
 
-    public static void createDirectories(String directories) {
+    public void createDirectories(String directories) {
         try {
             log.info("Directories: {}", directories);
             Files.createDirectories(Path.of(directories));
@@ -47,7 +49,7 @@ public class FileUtility {
         }
     }
 
-    public static void replaceTextInFile(String filePath, String text, String replacement) {
+    public void replaceTextInFile(String filePath, String text, String replacement) {
         try {
             log.info("Filepath: {}, text: {}, replacement text: {}", filePath, text, replacement);
             Path path = Paths.get(filePath);
@@ -59,7 +61,7 @@ public class FileUtility {
         }
     }
 
-    public static void moveOrRenameFile(String source, String destination) {
+    public void moveOrRenameFile(String source, String destination) {
         try {
             log.info("Source: {}, destination: {}", source, destination);
             FileUtils.moveFile(new File(source), new File(destination));
@@ -68,7 +70,7 @@ public class FileUtility {
         }
     }
 
-    public static void renameDir(String existingDirName, String newDirName) {
+    public void renameDir(String existingDirName, String newDirName) {
         try {
             log.info("Existing directory name: {}, new directory name: {}", existingDirName, newDirName);
             File file = new File(existingDirName);
@@ -79,7 +81,7 @@ public class FileUtility {
         }
     }
 
-    public static void deleteDirContents(String dirName) {
+    public void deleteDirContents(String dirName) {
         try {
             log.info("Directory name: {}", dirName);
             FileUtils.cleanDirectory(new File(dirName));
@@ -88,7 +90,7 @@ public class FileUtility {
         }
     }
 
-    public static void downloadFile(HttpServletResponse httpServletResponse, String fileName) {
+    public void downloadFile(HttpServletResponse httpServletResponse, String fileName) {
         try {
             log.info("Filename: {}", fileName);
             String zipName = fileName + ZIP.getValue();

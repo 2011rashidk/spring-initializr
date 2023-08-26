@@ -29,7 +29,7 @@ public class SpringInitializrRequest {
     private String packagingName;
 
     @NotBlank(message = "packagingType should not be blank")
-    @Pattern(regexp = "^(jar|war)$", message = "word should be jar or war")
+    @Pattern(regexp = "^(jar|war)$", message = "packaging type should be jar or war")
     private String packagingType;
 
     @NotEmpty(message = "dependencies should not be empty")

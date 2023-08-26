@@ -13,7 +13,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static org.happiest.minds.springinitializr.enums.Constants.ZIP;
+import static org.happiest.minds.springinitializr.enums.Constants.*;
 
 @Component
 @Slf4j
@@ -21,7 +21,7 @@ public class ZipUtility {
 
     public void zipFolder(String projectDirectory) {
         try {
-            Path sourceFolderPath = Path.of(projectDirectory);
+            Path sourceFolderPath = Path.of(PROJECT_DIR_NAME.getValue());
             String zipName = projectDirectory + ZIP.getValue();
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(Path.of(zipName).toFile()));
             Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<>() {

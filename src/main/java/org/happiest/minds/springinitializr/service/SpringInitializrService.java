@@ -24,6 +24,9 @@ import static org.happiest.minds.springinitializr.constant.StringConstants.*;
 public class SpringInitializrService {
 
     @Autowired
+    FileUtility fileUtility;
+
+    @Autowired
     XMLUtility xmlUtility;
 
     @Autowired
@@ -37,7 +40,7 @@ public class SpringInitializrService {
                 return new ResponseEntity<>(new SpringInitializrResponse(HttpStatus.BAD_REQUEST, DEPENDENCY_NOT_PRESENT.getValue()), HttpStatus.BAD_REQUEST);
             }
 
-            FileUtility.copyDirectory(REFERENCE_DIR_PATH.getValue(), DOWNLOAD_DIR_PATH.getValue());
+            fileUtility.copyDirectory(REFERENCE_DIR_PATH.getValue(), DOWNLOAD_DIR_PATH.getValue());
 
             updateDirectory(DOWNLOAD_DIR_MAIN_PATH.getValue(), DOWNLOAD_DIR_MAIN_JAVA_PATH.getValue(),
                     REFERENCE_DIR_MAIN_FILE_PATH.getValue(), MAIN_CLASS_FILENAME.getValue(),
@@ -51,36 +54,34 @@ public class SpringInitializrService {
 
             String newFolderName = DOWNLOAD_DIR_PATH.getValue() + springInitializrRequest.getArtifact();
 
-            FileUtility.renameDir(PROJECT_DIR_NAME.getValue(), newFolderName);
-
             zipUtility.zipFolder(newFolderName);
 
-            FileUtility.downloadFile(httpServletResponse, newFolderName);
+            fileUtility.downloadFile(httpServletResponse, newFolderName);
 
-            FileUtility.deleteDirContents(DOWNLOAD_DIR_PATH.getValue());
+            fileUtility.deleteDirContents(DOWNLOAD_DIR_PATH.getValue());
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         return new ResponseEntity<>(new SpringInitializrResponse(HttpStatus.OK, SPRING_TEMPLATE_READY_TO_DOWNLOAD.getValue()), HttpStatus.OK);
     }
 
-    public static void updateDirectory(String mainDirPath, String javaDirPath,
+    public void updateDirectory(String mainDirPath, String javaDirPath,
                                        String mainClassFilePath, String mainClassFilename,
                                        String application, String mainClassName,
                                        SpringInitializrRequest springInitializrRequest) {
         try {
             String artifactId = springInitializrRequest.getArtifact().replaceAll("[^a-zA-Z]", "");
             String packagingNamePath = springInitializrRequest.getPackagingName().replaceAll("[.]", "//");
-            FileUtility.deleteDirectory(mainDirPath);
+            fileUtility.deleteDirectory(mainDirPath);
             String downloadDirTestClassPath = javaDirPath + packagingNamePath;
-            FileUtility.createDirectories(downloadDirTestClassPath);
-            FileUtility.copyDirectory(mainClassFilePath, downloadDirTestClassPath);
+            fileUtility.createDirectories(downloadDirTestClassPath);
+            fileUtility.copyDirectory(mainClassFilePath, downloadDirTestClassPath);
             String testClassFilenamePath = downloadDirTestClassPath + mainClassFilename;
             String newTestClassName = StringUtils.capitalize(artifactId) + application;
-            FileUtility.replaceTextInFile(testClassFilenamePath, mainClassName, newTestClassName);
-            FileUtility.replaceTextInFile(testClassFilenamePath, EXISTING_PACKAGE_NAME.getValue(), springInitializrRequest.getPackagingName());
+            fileUtility.replaceTextInFile(testClassFilenamePath, mainClassName, newTestClassName);
+            fileUtility.replaceTextInFile(testClassFilenamePath, EXISTING_PACKAGE_NAME.getValue(), springInitializrRequest.getPackagingName());
             String newTestClassFilename = downloadDirTestClassPath + SLASH.getValue() + newTestClassName + JAVA.getValue();
-            FileUtility.moveOrRenameFile(testClassFilenamePath, newTestClassFilename);
+            fileUtility.moveOrRenameFile(testClassFilenamePath, newTestClassFilename);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
