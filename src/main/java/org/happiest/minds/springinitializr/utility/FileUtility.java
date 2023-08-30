@@ -70,17 +70,6 @@ public class FileUtility {
         }
     }
 
-    public void renameDir(String existingDirName, String newDirName) {
-        try {
-            log.info("Existing directory name: {}, new directory name: {}", existingDirName, newDirName);
-            File file = new File(existingDirName);
-            boolean isRenamed = file.renameTo(new File(newDirName));
-            log.info("Is file renamed: {}", isRenamed);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
-
     public void deleteDirContents(String dirName) {
         try {
             log.info("Directory name: {}", dirName);
