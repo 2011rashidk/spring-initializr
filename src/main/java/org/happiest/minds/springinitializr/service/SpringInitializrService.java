@@ -32,6 +32,12 @@ public class SpringInitializrService {
     @Autowired
     ZipUtility zipUtility;
 
+    public SpringInitializrService(FileUtility fileUtility, XMLUtility xmlUtility, ZipUtility zipUtility) {
+        this.fileUtility = fileUtility;
+        this.zipUtility = zipUtility;
+        this.xmlUtility = xmlUtility;
+    }
+
     public ResponseEntity<SpringInitializrResponse> downloadTemplate(HttpServletResponse httpServletResponse, SpringInitializrRequest springInitializrRequest) {
         try {
 
@@ -66,9 +72,9 @@ public class SpringInitializrService {
     }
 
     public void updateDirectory(String mainDirPath, String javaDirPath,
-                                       String mainClassFilePath, String mainClassFilename,
-                                       String application, String mainClassName,
-                                       SpringInitializrRequest springInitializrRequest) {
+                                String mainClassFilePath, String mainClassFilename,
+                                String application, String mainClassName,
+                                SpringInitializrRequest springInitializrRequest) {
         try {
             String artifactId = springInitializrRequest.getArtifact().replaceAll("[^a-zA-Z]", "");
             String packagingNamePath = springInitializrRequest.getPackagingName().replaceAll("[.]", "//");
