@@ -1,7 +1,9 @@
 package org.happiest.minds.springinitializr.utility;
 
 import lombok.extern.slf4j.Slf4j;
+import org.happiest.minds.springinitializr.config.SpringDependencyConfig;
 import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,15 +17,17 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
-import static org.happiest.minds.springinitializr.constant.StringConstants.*;
 import static org.happiest.minds.springinitializr.enums.Constants.*;
 
 @Component
 @Slf4j
 public class XMLUtility {
+
+    @Autowired
+    SpringDependencyConfig springDependencyConfig;
 
     public void updateXMLElementValue(String filePath, SpringInitializrRequest springInitializrRequest) {
 
@@ -48,7 +52,7 @@ public class XMLUtility {
     }
 
     private void setTextContentForDependency(Document document, NodeList dependencies,
-                                                    String groupIdValue, String artifactIdValue) {
+                                             String groupIdValue, String artifactIdValue) {
         try {
             Element dependency = document.createElement(DEPENDENCY.getValue());
             Element dependenciesElement = (Element) dependencies.item(0);
@@ -78,32 +82,13 @@ public class XMLUtility {
 
     private void createDependency(SpringInitializrRequest springInitializrRequest, Document document) {
         try {
-            Set<String> dependencyInput = new HashSet<>(springInitializrRequest.getDependencies());
-            for (String dependency : dependencyInput) {
+            List<String> dependencyInputs = springInitializrRequest.getDependencies();
+            Map<String, Map<String, String>> dependenciesConfig = springDependencyConfig.getDependencies();
+            for (String dependencyInput : dependencyInputs) {
                 NodeList dependencies = document.getElementsByTagName(DEPENDENCIES.getValue());
-                switch (dependency) {
-                    case WEB ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), WEB_ARTIFACT_ID.getValue());
-                    case GRAPH_QL ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), GRAPHQL_ARTIFACT_ID.getValue());
-                    case THYMELEAF ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), THYMELEAF_ARTIFACT_ID.getValue());
-                    case SECURITY ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), SECURITY_ARTIFACT_ID.getValue());
-                    case JPA ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), JPA_ARTIFACT_ID.getValue());
-                    case JDBC ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), JDBC_ARTIFACT_ID.getValue());
-                    case MY_SQL ->
-                            setTextContentForDependency(document, dependencies, MYSQL_GROUP_ID.getValue(), MYSQL_ARTIFACT_ID.getValue());
-                    case H_2 ->
-                            setTextContentForDependency(document, dependencies, H2_GROUP_ID.getValue(), H2_ARTIFACT_ID.getValue());
-                    case VALIDATION ->
-                            setTextContentForDependency(document, dependencies, SPRING_FRAMEWORK_GROUP_ID.getValue(), VALIDATION_ARTIFACT_ID.getValue());
-                    case LOMBOK ->
-                            setTextContentForDependency(document, dependencies, LOMBOK_GROUP_ID.getValue(), LOMBOK_ARTIFACT_ID.getValue());
-                    default -> log.error(DEPENDENCY_NOT_PRESENT.getValue());
-                }
+                String groupId = dependenciesConfig.get(dependencyInput).get(GROUP_ID.getValue());
+                String artifactId = dependenciesConfig.get(dependencyInput).get(ARTIFACT_ID.getValue());
+                setTextContentForDependency(document, dependencies, groupId, artifactId);
             }
         } catch (Exception e) {
             log.error(e.getMessage());

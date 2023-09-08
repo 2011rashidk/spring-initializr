@@ -30,20 +30,6 @@ public enum Constants {
     DEPENDENCY_NOT_PRESENT("Any or none of the dependency present"),
     SPRING_TEMPLATE_READY_TO_DOWNLOAD("Spring template ready to download"),
     ZIP(".zip"),
-    SPRING_FRAMEWORK_GROUP_ID("org.springframework.boot"),
-    WEB_ARTIFACT_ID("spring-boot-starter-web"),
-    GRAPHQL_ARTIFACT_ID("spring-boot-starter-graphql"),
-    THYMELEAF_ARTIFACT_ID("spring-boot-starter-thymeleaf"),
-    SECURITY_ARTIFACT_ID("spring-boot-starter-security"),
-    JPA_ARTIFACT_ID("spring-boot-starter-data-jpa"),
-    JDBC_ARTIFACT_ID("spring-boot-starter-data-jdbc"),
-    MYSQL_GROUP_ID("com.mysql"),
-    MYSQL_ARTIFACT_ID("mysql-connector-j"),
-    H2_GROUP_ID("com.h2database"),
-    H2_ARTIFACT_ID("h2"),
-    VALIDATION_ARTIFACT_ID("spring-boot-starter-validation"),
-    LOMBOK_GROUP_ID("org.projectlombok"),
-    LOMBOK_ARTIFACT_ID("lombok"),
     SLASH("/");
 
     private String value;

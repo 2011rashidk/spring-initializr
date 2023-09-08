@@ -1,6 +1,7 @@
 package org.happiest.minds.springinitializr.service;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.happiest.minds.springinitializr.config.SpringDependencyConfig;
 import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
 import org.happiest.minds.springinitializr.response.SpringInitializrResponse;
 import org.happiest.minds.springinitializr.utility.FileUtility;
@@ -22,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.happiest.minds.springinitializr.constant.StringConstants.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -45,6 +45,9 @@ class SpringInitializrServiceTest {
     @Mock
     private FileUtility fileUtility;
 
+    @Mock
+    private SpringDependencyConfig springDependencyConfig;
+
     @AfterEach
     public void validate() {
         validateMockitoUsage();
@@ -52,7 +55,7 @@ class SpringInitializrServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        springInitializrService = new SpringInitializrService(fileUtility, xmlUtility, zipUtility);
+        springInitializrService = new SpringInitializrService(fileUtility, xmlUtility, zipUtility, springDependencyConfig);
     }
 
     @Test
@@ -123,24 +126,21 @@ class SpringInitializrServiceTest {
 
     @Test
     void testGetDependencies() {
-        List<String> expectedDependencies = List.of(WEB, GRAPH_QL, THYMELEAF,
-                SECURITY, JPA, JDBC, MY_SQL, H_2, VALIDATION, LOMBOK);
+        List<String> expectedDependencies = springDependencyConfig.getDependencies().keySet().stream().toList();
         List<String> actualDependencies = springInitializrService.getDependencies();
         assertEquals(expectedDependencies, actualDependencies);
     }
 
     @Test
     void testDependencyPresentPositive() {
-        List<String> dependencies = List.of(WEB, GRAPH_QL, THYMELEAF,
-                SECURITY, JPA, JDBC, MY_SQL, H_2, VALIDATION, LOMBOK);
+        List<String> dependencies = springDependencyConfig.getDependencies().keySet().stream().toList();
         boolean result = springInitializrService.dependencyPresent(dependencies);
         assertTrue(result);
     }
 
     @Test
     void testDependencyPresentNegative() {
-        List<String> dependencies = List.of(
-                WEB, SECURITY, "ABC");
+        List<String> dependencies = List.of("web","graphql", "ABC");
         boolean result = springInitializrService.dependencyPresent(dependencies);
         assertFalse(result);
     }

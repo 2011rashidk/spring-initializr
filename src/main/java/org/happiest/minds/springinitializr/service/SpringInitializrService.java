@@ -2,6 +2,7 @@ package org.happiest.minds.springinitializr.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.happiest.minds.springinitializr.config.SpringDependencyConfig;
 import org.happiest.minds.springinitializr.request.SpringInitializrRequest;
 import org.happiest.minds.springinitializr.response.SpringInitializrResponse;
 import org.happiest.minds.springinitializr.utility.FileUtility;
@@ -15,9 +16,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.happiest.minds.springinitializr.enums.Constants.*;
-import static org.happiest.minds.springinitializr.constant.StringConstants.*;
 
 @Service
 @Slf4j
@@ -32,10 +34,14 @@ public class SpringInitializrService {
     @Autowired
     ZipUtility zipUtility;
 
-    public SpringInitializrService(FileUtility fileUtility, XMLUtility xmlUtility, ZipUtility zipUtility) {
+    @Autowired
+    SpringDependencyConfig springDependencyConfig;
+
+    public SpringInitializrService(FileUtility fileUtility, XMLUtility xmlUtility, ZipUtility zipUtility, SpringDependencyConfig springDependencyConfig) {
         this.fileUtility = fileUtility;
         this.zipUtility = zipUtility;
         this.xmlUtility = xmlUtility;
+        this.springDependencyConfig = springDependencyConfig;
     }
 
     public ResponseEntity<SpringInitializrResponse> downloadTemplate(HttpServletResponse httpServletResponse, SpringInitializrRequest springInitializrRequest) {
@@ -94,11 +100,10 @@ public class SpringInitializrService {
     }
 
     public List<String> getDependencies() {
-        List<String> dependencies = List.of(WEB, GRAPH_QL, THYMELEAF,
-                SECURITY, JPA, JDBC,
-                MY_SQL, H_2, VALIDATION, LOMBOK);
-        log.info("Dependencies: {}", dependencies);
-        return dependencies;
+        Map<String, Map<String, String>> dependencies = springDependencyConfig.getDependencies();
+        Set<String> dependenciesName = dependencies.keySet();
+        log.info("dependenciesName: {}", dependenciesName);
+        return dependenciesName.stream().toList();
     }
 
     public boolean dependencyPresent(List<String> dependencies) {
